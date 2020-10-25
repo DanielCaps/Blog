@@ -1,0 +1,67 @@
+﻿@model IndexViewModel
+
+@{
+    ViewBag.Title = "Blog Website";
+    ViewBag.Description = "This Blog has everything";
+    ViewBag.Keywords = "Blog programming travel photography";
+}
+
+<div id="wrapper" class="bg">
+
+    <!-- Intro -->
+    <div id="intro" style="margin-top:-100px; margin-bottom:100px">
+        <h1 style="color: wheat">
+            Blog
+        </h1>
+        <form asp-controller="Home" asp-action="Index" method="get">
+            <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+            <input type="hidden" name="category" value="@Model.Category" />
+            <input style="color:black; background-color:white" class="search" type="text" name="search" placeholder="Search Blog" value="@Model.Search" />
+            <button type="submit" class="submit-btn">Search</button>
+        </form>
+    </div>
+
+    <!--Header-->
+    <header id="header">
+        <a asp-action="Index" class="logo">Search</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li class="active"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-route-category="Programing">Programing</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-route-category="Travel">Travel</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-route-category="Photography">Photography</a></li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a asp-area="" asp-controller="Panel" asp-action="Index">Admin Panel</a></li>
+
+                }
+                <li><a asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a></li>
+            }
+            else
+            {
+                <li><a asp-area="" asp-controller="Auth" asp-action="Login">Login</a></li>
+                <li><a asp-action="Register" asp-controller="Auth">Register</a></li>
+            }
+        </ul>
+    </nav>
+
+    <div id="main">
+        @foreach (var post in Model.Posts)
+        {
+            var image_path = $"/Image/{post.Image}";
+
+        <article class="post featured">
+            <h2 class="postTitle">@post.Title</h2>
+            <a class="image main" asp-controller="Home" asp-action="Post" asp-route-id="@post.Post_Id">
+                <img src="@image_path" />
+            </a>
+        </article>
+        }
+        <partial name="_BlogPagination" model="Model" />
+    </div>
+</div>

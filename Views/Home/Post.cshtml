@@ -1,0 +1,66 @@
+﻿@model Blog.Models.Post
+
+@{
+    ViewBag.Title = Model.Title;
+    ViewBag.Description = Model.Description;
+    ViewBag.Keywords = $"{ Model.Tags?.Replace(".", " ")} {Model.Category}";
+}
+
+
+<div class="container" style="background-color:white; justify-content:center">
+    <div class="post no-shadow">
+        @if (!String.IsNullOrEmpty(Model.Image))
+        {
+            var image_path = $"/Image/{Model.Image}";
+            <img src="@image_path" />
+        }
+    </div>
+    <div class="post-body">
+        @Html.Raw(Model.Body)
+
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h3 style="color:black">Comments</h3>
+        <div class="comment-section">
+            <partial>
+                @{
+                    await Html.RenderPartialAsync("_MainComment", new CommentViewModel { PostId = Model.Post_Id, MainCommentId = 0 });
+                }
+
+                @foreach (var c in Model.MainComments)
+                {
+                    <p>
+                        @c.Message -- @c.Created
+                    </p>
+                    @*
+                        <div style="margin-left:20px;">
+                            <h4>Sub Comments</h4>
+                        
+                            <div id="subcomments">
+                                @{
+                                    await Html.RenderPartialAsync("_MainComment", new CommentViewModel { PostId = Model.Post_Id, MainCommentId = c.Comment_ID });
+                                }
+                            </div>
+                            @foreach (var sc in c.SubComments)
+                            {
+                                <p>
+                                    @sc.Message -- @sc.Created
+                                </p>
+                            }
+                        </div>
+                    *@
+                }
+            </partial>
+        </div>
+    }
+    else
+    {
+        <div>
+            <a style="color:dodgerblue" asp-action="Login" asp-controller="Auth">Sign In to comment</a>
+        </div>
+    }
+
+</div>
+
+

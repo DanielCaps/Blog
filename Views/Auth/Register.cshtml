@@ -1,0 +1,29 @@
+﻿@model Blog.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<form class="sign-in-form" asp-controller="Auth" asp-action="Register" method="post">
+    <div>
+        <label style="color:wheat">User Name</label>
+        <input style="color:wheat" asp-for="Email" />
+        <span style="color:red" asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label style="color:wheat">Password</label>
+        <input style="color:wheat" asp-for="Password" />
+        <span style="color:red" asp-validation-for="Password"></span>
+
+    </div>
+    <div>
+        <label style="color:wheat">Confirm Password</label>
+        <input style="color:wheat" asp-for="ConfirmPassword" />
+        <span style="color:red" asp-validation-for="ConfirmPassword"></span>
+
+    </div>
+    <div>
+        <button type="submit" value="Register">Sign Up</button>
+    </div>
+
+</form>
